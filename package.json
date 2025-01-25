@@ -8,11 +8,16 @@
         "dc-down": "docker-compose --env-file .env -f docker-compose.yml down",
         "dc-test-up": "docker-compose --env-file .env.test -f docker-compose.yml up -d",
         "dc-test-down": "docker-compose --env-file .env.test -f docker-compose.yml down",
-        "db-migrate": "./node_modules/.bin/sequelize-cli db:migrate",
-        "db-seed": "./node_modules/.bin/sequelize-cli db:seed:all",
-        "db-reset": "npm run db-drop && npm run db-create && npm run db-migrate && npm run db-seed",
-        "db-drop": "./node_modules/.bin/sequelize-cli db:drop",
-        "db-create": "./node_modules/.bin/sequelize-cli db:create",
+        "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+        "typeorm:extension": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-extension/bin/cli.cjs",
+        "db:seed": "npm run typeorm:extension -- -d ./src/db/command-data-source.ts seed",
+        "db:drop": "npm run typeorm:extension -- -d ./src/db/command-data-source.ts db:drop",
+        "db:create": "npm run typeorm:extension -- -d ./src/db/command-data-source.ts db:create",
+        "db:setup": "npm run db:drop && npm run db:create && npm run migration:run && npm run db:seed",
+        "migration:run": "npm run typeorm migration:run -- -d ./src/db/command-data-source.ts",
+        "migration:revert": "npm run typeorm migration:revert -- -d ./src/db/command-data-source.ts",
+        "migration:generate": "npm run typeorm migration:generate -- -d ./src/db/command-data-source.ts",
+        "eslint:fix": "npx eslint --fix .",
         "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
         "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
     },
@@ -28,18 +33,28 @@
     "dependencies": {
         "cors": "2.8.5",
         "dotenv": "16.4.7",
+        "env-var": "7.5.0",
         "express": "4.21.2",
         "express-async-errors": "3.1.1",
+        "fs-extra": "11.3.0",
         "helmet": "8.0.0",
+        "mysql2": "3.12.0",
         "sequelize": "6.37.5",
-        "sequelize-typescript": "2.1.6"
+        "sequelize-typescript": "2.1.6",
+        "ts-node": "10.9.2",
+        "typeorm": "0.3.20",
+        "typeorm-extension": "3.6.3"
     },
     "devDependencies": {
         "@types/cors": "2.8.17",
         "@types/express": "5.0.0",
+        "eslint": "9.19.0",
+        "eslint-config-prettier": "10.0.1",
+        "eslint-plugin-perfectionist": "4.7.0",
+        "eslint-plugin-you-dont-need-lodash-underscore": "6.14.0",
         "prettier": "3.4.2",
-        "ts-node": "10.9.2",
         "ts-node-dev": "2.0.0",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "5.7.3"
     }
 }
