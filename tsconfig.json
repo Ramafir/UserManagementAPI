@@ -1,0 +1,31 @@
+{
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node",
+        "transpileOnly": true
+    },
+    "compilerOptions": {
+        "target": "es6",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "moduleResolution": "Node",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"],
+            "@tests/*": ["tests/*"]
+        },
+        "rootDirs": ["./src", "./tests"],
+        "sourceMap": true,
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "useUnknownInCatchVariables": true,
+        "noUnusedLocals": true,
+        "allowUnreachableCode": false,
+        "skipLibCheck": true,
+        "resolveJsonModule": true
+    }
+}
