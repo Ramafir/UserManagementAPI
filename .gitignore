@@ -1,0 +1,19 @@
+.env
+.env.test
+node_modules
+package-lock.json
+ngrok
+dist
+envs/\.*.env
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System Files
+.DS_Store
+Thumbs.db
