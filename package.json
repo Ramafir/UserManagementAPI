@@ -19,7 +19,8 @@
         "migration:generate": "npm run typeorm migration:generate -- -d ./src/db/command-data-source.ts",
         "eslint:fix": "npx eslint --fix .",
         "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-        "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
+        "test": "NODE_ENV=test jest --detectOpenHandles --forceExit",
+        "prettier": "prettier --write ."
     },
     "engines": {
         "node": "^20.0.0",
