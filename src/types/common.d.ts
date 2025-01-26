@@ -6,10 +6,14 @@ export interface ISequelizeFactoryOptions {
     database: string;
     username: string;
     password: string;
-    writeOptions: IDBConnectionConfig;
-    readOptions: IDBConnectionConfig | IDBConnectionConfig[];
-    logging: false | Console['log'];
-    define: IDBDefineConfig;
+    host: string;
+    port: number;
+    logging: ((message?: any, ...optionalParams: any[]) => void) | false;
+    define: {
+        charset: string;
+        collate: string;
+        timestamps: boolean;
+    };
 }
 
 export interface IPatchDataItem<PROPERTY_TYPE> {

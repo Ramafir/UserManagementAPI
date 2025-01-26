@@ -1,23 +1,17 @@
 import mysql from 'mysql2/promise';
-
 import { config as defaultConfig } from '@/config';
-
 import type { IDBConfig } from '@/types/config';
 
 export const drop = async (config?: IDBConfig) => {
     console.log('Drop script has started.');
 
-    const {
-        rootPassword,
-        name,
-        write: { host, port }
-    } = config || defaultConfig.db;
+    const { name, host, port, rootPassword } = config || defaultConfig.db;
 
     const connection = await mysql.createConnection({
-        host,
+        host: host || 'localhost',
         user: 'root',
-        password: rootPassword,
-        port
+        password: rootPassword || 'root',
+        port: port || 3306,
     });
 
     await connection.execute(`DROP DATABASE IF EXISTS ${name}`);

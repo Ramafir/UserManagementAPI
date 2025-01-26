@@ -1,33 +1,23 @@
 import mysql from 'mysql2/promise';
-
 import { config as defaultConfig } from '@/config';
-
 import type { IDBConfig } from '@/types/config';
 
-const {
-    app: { seedersLogging }
-} = defaultConfig;
+const { app: { seedersLogging } } = defaultConfig;
 
 export const create = async (config?: IDBConfig) => {
     if (seedersLogging) {
         console.log('Create script has started.');
     }
 
-    const {
-        username,
-        password,
-        rootPassword,
-        name,
-        write: { host, port }
-    } = config || defaultConfig.db;
+    const { username, password, rootPassword, name, host, port } = config || defaultConfig.db;
 
     console.log(`Connecting to ${host}:${port} on root user.`);
 
     const connection = await mysql.createConnection({
-        host,
+        host: host || 'localhost',
         user: 'root',
-        password: rootPassword,
-        port
+        password: rootPassword || '',
+        port: port || 3306,
     });
 
     await connection.execute(`CREATE DATABASE IF NOT EXISTS ${name}`);

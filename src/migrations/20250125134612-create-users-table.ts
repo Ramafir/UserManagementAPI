@@ -11,6 +11,8 @@ const {
 export const up = async ({ context: sequelize }: IMigrationParams) => {
     const queryInterface = sequelize.getQueryInterface();
 
+    console.log('Creating table Users...');
+
     await queryInterface.createTable(
         'Users',
         {
@@ -26,10 +28,10 @@ export const up = async ({ context: sequelize }: IMigrationParams) => {
                 allowNull: false
             },
             firstName: {
-                type: DataType.STRING,
+                type: DataType.STRING
             },
             lastName: {
-                type: DataType.STRING,
+                type: DataType.STRING
             },
             role: {
                 type: DataType.STRING
@@ -51,6 +53,8 @@ export const up = async ({ context: sequelize }: IMigrationParams) => {
         { ...define }
     );
 };
+
+console.log('Table Users created.');
 
 export const down = async ({ context: sequelize }: IMigrationParams) => {
     const queryInterface = sequelize.getQueryInterface();

@@ -23,7 +23,7 @@
         "dev-db-setup-base-fresh": "npm run dev-db-drop && npm run dev-db-setup-base",
         "dev-db-setup": "npm run dev-db-setup-base",
         "dev-db-setup-fresh": "npm run dev-db-drop && npm run dev-db-setup-base",
-        "dev-db-setup-work": "npm run dev-db-setup-base",
+        "dev-db-setup-work": "npm run dev-db-setup-base && npm run dev-db-seed-work",
         "dev-db-setup-work-fresh": "npm run dev-db-drop && npm run dev-db-setup-base && npm run dev-db-seed-work",
         "build": "rm -rf ./dist && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
         "eslint": "eslint . --fix --cache --ignore-path=.gitignore",

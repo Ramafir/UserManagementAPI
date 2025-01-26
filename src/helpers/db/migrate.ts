@@ -6,9 +6,7 @@ import { initSequelize } from '@/helpers/db/initSequelize';
 import type { IDBConfig } from '@/types/config';
 
 export const migrate = async (config?: IDBConfig) => {
-    console.log('Migration script has started.');
-
-    const sequelize = initSequelize(config);
+    const sequelize = initSequelize(config);    
 
     const extension = __filename.split('.').pop() || 'ts';
 

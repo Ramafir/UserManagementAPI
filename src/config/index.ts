@@ -12,8 +12,6 @@ const env = (key: string, defaultValue = '') =>
 
 const isEnabled = (key: string) => env(key) === 'true';
 
-const parseUrl = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url);
-
 const TEST_ENVIRONMENTS = ['test'];
 const DEV_ENVIRONMENTS = ['dev', 'development'];
 const PROD_ENVIRONMENTS = ['prod', 'production'];
@@ -35,37 +33,37 @@ if (!AVAILABLE_ENVIRONMENTS.includes(currentEnvironment)) {
 
 export const config: IConfig = {
     app: {
-        env: currentEnvironment,
-        isDev: DEV_ENVIRONMENTS.includes(currentEnvironment),
-        isTest: TEST_ENVIRONMENTS.includes(currentEnvironment),
-        isProduction: PROD_ENVIRONMENTS.includes(currentEnvironment),
-        port: parseInt(env('PORT', '3000')),
-        url: parseUrl(env('APP_URL', 'http://127.0.0.1:3000')),
-        frontendUrl: parseUrl(env('FRONTEND_URL', 'http://127.0.0.1:8080')),
-        corsSites: env('CORS_SITES'),
-        seedersLogging: isEnabled('SEEDERS_LOGGING')
+        secret: env('APP_SECRET'),
+        env: env('NODE_ENV'),
+        url: env('APP_URL', 'http://localhost:3001') || 'http://localhost:3001',
+        port: parseInt(env('PORT', '3001') || '3001', 10),
+        frontendUrl: env('APP_FRONTEND_URL')
     },
     db: {
-        dialect: env('DATABASE_DIALECT'),
+        url:
+            env('DATABASE_DIALECT', 'mysql') +
+            '://' +
+            env('DATABASE_USERNAME', 'guest') +
+            ':' +
+            env('DATABASE_PASSWORD', 'guest') +
+            '@' +
+            env('DATABASE_HOST', 'localhost') +
+            ':' +
+            env('DATABASE_PORT', '3306') +
+            '/' +
+            env('DATABASE_NAME', 'db'),
+        host: env('DATABASE_HOST', 'localhost') || 'localhost',
         name: env('DATABASE_NAME'),
         username: env('DATABASE_USERNAME'),
         password: env('DATABASE_PASSWORD'),
-        rootPassword: env('DATABASE_ROOT_PASSWORD'),
-        write: {
-            host: env('DATABASE_HOST'),
-            port: parseInt(env('DATABASE_PORT'))
-        },
-        read: [
-            {
-                host: env('DATABASE_HOST'),
-                port: parseInt(env('DATABASE_PORT'))
-            }
-        ],
+        rootPassword: env('DATABASE_ROOT_PASSWORD', 'root') || 'root',
+        dialect: env('DATABASE_DIALECT', 'mysql') || 'mysql',
+        port: parseInt(env('DATABASE_PORT', '3306') || '3306', 10),
         logging: isEnabled('SEQUELIZE_LOGGING') ? console.log : false,
         define: {
             charset: 'utf8mb4',
             collate: 'utf8mb4_unicode_ci',
             timestamps: false
         }
-    }
+    },
 };

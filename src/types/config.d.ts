@@ -1,13 +1,9 @@
 export interface IAppConfig {
+    secret: string;
     env: string;
-    isDev: boolean;
-    isTest: boolean;
-    isProduction: boolean;
     port: number;
     url: string;
-    frontendUrl: string;
-    corsSites: string;
-    seedersLogging: boolean;
+    frontendUrl: string | null;
 }
 
 export interface IDBDefineConfig {
@@ -17,15 +13,20 @@ export interface IDBDefineConfig {
 }
 
 export interface IDBConfig {
-    username: string;
-    password: string;
-    rootPassword: string;
-    logging: false | Console['log'];
-    define: IDBDefineConfig;
+    url: string;
     dialect: string;
-    name: string;
-    write: IDBConnectionConfig;
-    read: IDBConnectionConfig | IDBConnectionConfig[];
+    name: string | null;
+    username: string | null;
+    password: string | null;
+    rootPassword: string | null;
+    host: string | null;
+    port: number;
+    logging: ((message?: any, ...optionalParams: any[]) => void) | false;
+    define: {
+        charset: string;
+        collate: string;
+        timestamps: boolean;
+    };
 }
 
 export interface ISessionConfig {
