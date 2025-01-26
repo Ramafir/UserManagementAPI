@@ -1,49 +1,71 @@
-import env from 'env-var';
-import dotenv from 'dotenv';
+import colors from 'colors';
+import { config as dotenvConfig } from 'dotenv';
 
-dotenv.config({});
+import type { IConfig } from '@/types/config';
 
-import { Environment } from '@enums/Environment';
-import { DatabaseType } from '@enums/DatabaseType';
+dotenvConfig({
+    path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+});
 
-const envString = (name: string) => env.get(name).required().asString();
-const envPort = (name: string) => env.get(name).required().asPortNumber();
-const envEnum = <T extends object>(name: string, type: T) =>
-    env.get(name).required().asEnum(Object.values(type));
+const env = (key: string, defaultValue = '') =>
+    process.env[key] || defaultValue;
 
-const ENV = <Environment>envEnum('NODE_ENV', Environment);
+const isEnabled = (key: string) => env(key) === 'true';
 
-if (ENV === Environment.Test) {
-    dotenv.config({ path: '.env.test', override: true });
+const parseUrl = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url);
+
+const TEST_ENVIRONMENTS = ['test'];
+const DEV_ENVIRONMENTS = ['dev', 'development'];
+const PROD_ENVIRONMENTS = ['prod', 'production'];
+const AVAILABLE_ENVIRONMENTS = [
+    ...TEST_ENVIRONMENTS,
+    ...DEV_ENVIRONMENTS,
+    ...PROD_ENVIRONMENTS
+];
+
+const currentEnvironment = env('NODE_ENV');
+
+if (!AVAILABLE_ENVIRONMENTS.includes(currentEnvironment)) {
+    console.warn(
+        colors.yellow(
+            `NODE_ENV is incorrect. Should be one of: ${AVAILABLE_ENVIRONMENTS.join(', ')}.`
+        )
+    );
 }
 
-export const APP = {
-    PORT: envPort('PORT'),
-    URL: envString('APP_URL'),
-    ENV,
-    ROUTES_PREFIX: envString('ROUTES_PREFIX'),
-    IS_CLEARING_TEMPORARY_UPLOADS_DIR: false,
-    MAX_ITEMS_PER_PAGE: 20,
-    BASE_DIR: ENV === Environment.Production ? 'dist' : 'src',
-    IS_TEST: ENV === Environment.Test,
-    IS_PRODUCTION: ENV === Environment.Production,
-    IS_DEVELOPMENT: ENV === Environment.Development,
-    E2E_TESTS_URL: 'http://localhost:4173'
-};
-
-export const DATABASE = {
-    NAME: envString('DATABASE_NAME'),
-    TYPE: <DatabaseType>envEnum('DATABASE_TYPE', DatabaseType),
-    ROOT: {
-        USERNAME: envString('DATABASE_USER'),
-        PASSWORD: envString('DATABASE_ROOT_PASSWORD')
+export const config: IConfig = {
+    app: {
+        env: currentEnvironment,
+        isDev: DEV_ENVIRONMENTS.includes(currentEnvironment),
+        isTest: TEST_ENVIRONMENTS.includes(currentEnvironment),
+        isProduction: PROD_ENVIRONMENTS.includes(currentEnvironment),
+        port: parseInt(env('PORT', '3000')),
+        url: parseUrl(env('APP_URL', 'http://127.0.0.1:3000')),
+        frontendUrl: parseUrl(env('FRONTEND_URL', 'http://127.0.0.1:8080')),
+        corsSites: env('CORS_SITES'),
+        seedersLogging: isEnabled('SEEDERS_LOGGING')
     },
-    HOST: envString('DATABASE_HOST'),
-    PORT: envPort('DATABASE_PORT')
-};
-
-export const REDIS = {
-    HOST: envString('REDIS_HOST'),
-    PORT: envPort('REDIS_PORT'),
-    PASSWORD: envString('REDIS_PASSWORD')
+    db: {
+        dialect: env('DATABASE_DIALECT'),
+        name: env('DATABASE_NAME'),
+        username: env('DATABASE_USERNAME'),
+        password: env('DATABASE_PASSWORD'),
+        rootPassword: env('DATABASE_ROOT_PASSWORD'),
+        write: {
+            host: env('DATABASE_HOST'),
+            port: parseInt(env('DATABASE_PORT'))
+        },
+        read: [
+            {
+                host: env('DATABASE_HOST'),
+                port: parseInt(env('DATABASE_PORT'))
+            }
+        ],
+        logging: isEnabled('SEQUELIZE_LOGGING') ? console.log : false,
+        define: {
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
+            timestamps: false
+        }
+    }
 };
