@@ -1,27 +1,26 @@
-services:
-  db:
-    image: mysql:8.0
-    container_name: ${DATABASE_CONTAINER_NAME}
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
-    ports:
-      - "127.0.0.1:${DATABASE_PORT}:3306"
-    volumes:
-      - db:/var/lib/mysql
-
-  redis:
-    image: bitnami/redis
-    container_name: ${REDIS_CONTAINER_NAME}
-    restart: unless-stopped
-    ports:
-      - "127.0.0.1:${REDIS_PORT}:6379"
-    volumes:
-      - redis:/var/lib/redis
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+version: '3.8'
 
 volumes:
-  db:
-  redis:
+    mysql.data:
+
+services:
+    mysql:
+        image: mysql:8.0
+        container_name: ${COMPOSE_PROJECT_NAME}.mysql.docker
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: ${DATABASE_NAME}
+            MYSQL_USER: ${DATABASE_USERNAME}
+            MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+        volumes:
+            - mysql.data:/var/lib/mysql
+        ports:
+            - 127.0.0.1:${DATABASE_PORT}:3306
+        networks:
+            - network
+
+networks:
+    network:
+        driver: bridge
