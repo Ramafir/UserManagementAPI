@@ -52,9 +52,9 @@ export const up = async ({ context: sequelize }: IMigrationParams) => {
         },
         { ...define }
     );
-};
 
-console.log('Table Users created.');
+    console.log('Table Users created.');
+};
 
 export const down = async ({ context: sequelize }: IMigrationParams) => {
     const queryInterface = sequelize.getQueryInterface();
