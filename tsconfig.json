@@ -1,29 +1,44 @@
 {
-    "ts-node": {
-      "transpileOnly": true
-    },
-    "compilerOptions": {
-      "target": "es6",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "module": "commonjs", // Używaj CommonJS
-      "moduleResolution": "node",
-      "baseUrl": "./",
-      "paths": {
-        "@/*": ["src/*"],
-        "@tests/*": ["tests/*"]
-      },
-      "rootDirs": ["./src", "./tests"],
-      "sourceMap": true,
-      "outDir": "./dist",
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "strictPropertyInitialization": false,
-      "useUnknownInCatchVariables": true,
-      "noUnusedLocals": true,
-      "allowUnreachableCode": false,
-      "skipLibCheck": true,
-      "resolveJsonModule": true
+  "ts-node": {
+    "files": true
+  },
+  "compilerOptions": {
+    "lib": ["ES2022", "dom"],
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "commonjs",
+    "skipLibCheck": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "baseUrl": "src",
+    "paths": {
+      "@db/*": ["db/*"],
+      "@jobs/*": ["jobs/*"],
+      "@mappers/*": ["mappers/*"],
+      "@enums/*": ["types/enums/*"],
+      "@config": ["config/"],
+      "@routes": ["routes/"],
+      "@utils/*": ["utils/*"],
+      "@config/*": ["config/*"],
+      "@routes/*": ["routes/*"],
+      "@helpers/*": ["helpers/*"],
+      "@schemas/*": ["schemas/*"],
+      "@services/*": ["services/*"],
+      "@factories/*": ["factories/*"],
+      "@middleware/*": ["middleware/*"],
+      "@controllers/*": ["controllers/*"],
+      "@repositories/*": ["repositories/*"],
+      "@consumer-handlers/*": ["consumer-handlers/*"],
+      "@integration-tests/*": ["tests/integration/*"],
+      "@shared/*": ["../../shared/dist/*"]
     }
-  }
+  },
+  "exclude": ["dist/**"]
+}

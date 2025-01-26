@@ -1,0 +1,5 @@
+export declare function isSimpleValue(value: unknown, options?: {
+    withNull?: boolean;
+    withUndefined?: boolean;
+}): boolean;
+//# sourceMappingURL=simple.d.ts.map
