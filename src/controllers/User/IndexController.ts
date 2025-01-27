@@ -2,11 +2,10 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { StatusCodes as HTTP } from 'http-status-codes';
 
-import { UserMapper } from '@mappers/UserMapper';
-import { IUserRepository } from 'types/repositories/IUserRepository';
-
-import { BaseController } from '@controllers/BaseController';
 import { Di } from '@enums/Di';
+import { UserMapper } from '@mappers/UserMapper';
+import { BaseController } from '@controllers/BaseController';
+import { IUserRepository } from 'types/repositories/IUserRepository';
 
 @injectable()
 export class IndexController extends BaseController {
