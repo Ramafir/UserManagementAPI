@@ -3,11 +3,11 @@ import { inject, injectable } from 'tsyringe';
 import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { Di } from '@enums/Di';
-import { BaseController } from '@controllers/BaseController';
 import { IUserRepository } from 'types/repositories/IUserRepository';
+import { BaseController } from '@controllers/BaseController';
 
 @injectable()
-export class ShowController extends BaseController {
+export class DeleteController extends BaseController {
     constructor(
         @inject(Di.UserRepository)
         private userRepository: IUserRepository
@@ -29,19 +29,15 @@ export class ShowController extends BaseController {
                 return this.finalizeRequest(response, HTTP.NOT_FOUND, { error: 'User not found' });
             }
 
-            const userResponse = {
-                id: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role,
-            };
+            await this.userRepository.hardDeleteEntity(user);
 
-            return this.finalizeRequest(response, HTTP.OK, userResponse);
+            return this.finalizeRequest(response, HTTP.OK, { message: 'User deleted successfully' });
         } catch (error) {
-            console.error('Error in ShowController:', error);
-            
-            return this.finalizeRequest(response, HTTP.INTERNAL_SERVER_ERROR, { error: 'Internal server error' });
+            console.error('Error in DeleteController:', error);
+
+            return this.finalizeRequest(response, HTTP.INTERNAL_SERVER_ERROR, {
+                error: 'Internal server error',
+            });
         }
     }
 }
