@@ -1,25 +1,22 @@
-import { User } from "@db/entities/User";
-import { BaseMapper } from "./BaseMapper";
+import { User } from '@db/entities/User';
+import { BaseMapper } from './BaseMapper';
 
 export class UserMapper extends BaseMapper<User> {
-  id: number;
-  email: string;
-  fullName: string;
-  role: string;
-  isActive: boolean;
+    id: number;
+    email: string;
+    fullName: string;
+    role: string;
+    isActive: boolean;
 
-  constructor(data: User) {
-    super(data, ["id", "email", "role"]);
-    
-    this.assignInitialKeys();
+    constructor(data: User) {
+        super(data, ['id', 'email', 'role']);
 
-    this.fullName = [data.firstName, data.lastName]
-      .filter(Boolean)
-      .join(" ")
-      .trim();
+        this.assignInitialKeys();
 
-    this.isActive = data.deletedAt === null;
+        this.fullName = [data.firstName, data.lastName].filter(Boolean).join(' ').trim();
 
-    this.role = data.role;
-  }
+        this.isActive = data.deletedAt === null;
+
+        this.role = data.role;
+    }
 }

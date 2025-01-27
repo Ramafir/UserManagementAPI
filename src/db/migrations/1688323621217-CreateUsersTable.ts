@@ -1,10 +1,10 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateUsersTable1688323621217 implements MigrationInterface {
-  name = "CreateUsersTable1688323621217";
+    name = 'CreateUsersTable1688323621217';
 
-  public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
       CREATE TABLE \`users\` (
         \`id\` int NOT NULL AUTO_INCREMENT,
         \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -18,9 +18,9 @@ export class CreateUsersTable1688323621217 implements MigrationInterface {
         PRIMARY KEY (\`id\`)
       ) ENGINE=InnoDB
     `);
-  }
+    }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE \`users\``);
-  }
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`DROP TABLE \`users\``);
+    }
 }

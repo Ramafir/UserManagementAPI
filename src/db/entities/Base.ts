@@ -1,22 +1,17 @@
-import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export class Base {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+    @UpdateDateColumn()
+    updatedAt: Date;
 
-  @DeleteDateColumn({
-    nullable: true,
-  })
-  deletedAt: Date | null;
+    @DeleteDateColumn({
+        nullable: true,
+    })
+    deletedAt: Date | null;
 }

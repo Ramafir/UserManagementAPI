@@ -1,21 +1,21 @@
-import { faker } from "@faker-js/faker";
-import { User } from "@db/entities/User";
-import { setSeederFactory } from "typeorm-extension";
+import { faker } from '@faker-js/faker';
+import { User } from '@db/entities/User';
+import { setSeederFactory } from 'typeorm-extension';
 
 export default setSeederFactory(User, () => {
-  const user = new User();
+    const user = new User();
 
-  user.firstName = faker.name.firstName();
+    user.firstName = faker.name.firstName();
 
-  user.lastName = faker.name.lastName();
+    user.lastName = faker.name.lastName();
 
-  user.email = faker.internet.email(
-    faker.name.firstName().toLowerCase(),
-    faker.name.lastName().toLowerCase(),
-    "usermanagement.test"
-  );
+    user.email = faker.internet.email(
+        faker.name.firstName().toLowerCase(),
+        faker.name.lastName().toLowerCase(),
+        'usermanagement.test'
+    );
 
-  user.role = 'user';
+    user.role = 'user';
 
-  return user;
+    return user;
 });
