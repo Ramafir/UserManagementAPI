@@ -47,6 +47,7 @@ export class StoreController extends BaseController {
             return this.finalizeRequest(response, HTTP.CREATED, mappedUser);
         } catch (error) {
             console.error('Error in StoreController:', error);
+
             return this.finalizeRequest(response, HTTP.INTERNAL_SERVER_ERROR, {
                 error: 'Internal server error',
             });
