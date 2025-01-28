@@ -21,7 +21,7 @@ UserManager-API
 
 </details>
 
-## Running
+## Installation
 
 <details>
 <summary>Development</summary>
@@ -48,6 +48,13 @@ UserManager-API
     npm run dev
     ```
 
-## Testing
-
 </details>
+
+## Authentication for Endpoints
+
+To interact with the API endpoints, such as through Postman, you need to include a `Bearer` token for authorization. The application uses a simple token-based security mechanism for accessing the endpoints.
+
+Add the following token to the `Authorization` header in your requests:
+
+-   You can find the token in the `.env` file under the `AUTH_TOKEN` variable:
+-   This token will grant you access to the protected endpoints.
