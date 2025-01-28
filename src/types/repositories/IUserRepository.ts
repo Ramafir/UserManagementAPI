@@ -1,22 +1,10 @@
-import { User } from "@db/entities/User";
-import { IBaseRepository } from "./IBaseRepository";
-import { TransactionResult } from "types/TransactionResult";
+import { User } from '@db/entities/User';
+import { IBaseRepository } from './IBaseRepository';
 
 export interface IUserRepository extends IBaseRepository<User> {
-  findByEmail(
-    email: string,
-    options?: { includePermissions: boolean }
-  ): Promise<User | null>;
+    findByEmail(email: string): Promise<User | null>;
 
-  getRoleId(userId: number): Promise<number>;
+    getUsersByRole(role: string): Promise<User[]>;
 
-  filterUsersWithAccessToWorkspace(
-    workspaceId: number,
-    userIds: number[]
-  ): Promise<User[]>;
-
-  updateWorkspacesAccess(
-    userId: number,
-    workspaceIds: number[]
-  ): Promise<TransactionResult<void>>;
+    getAllUsers(): Promise<User[]>;
 }

@@ -1,12 +1,11 @@
 import { Response } from 'express';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { IBaseController } from 'types/controllers/IBaseController';
 import { IEntityMapperService } from 'types/services/IEntityMapperService';
 
 import { Di } from '@enums/Di';
 import { getInstanceOf } from '@helpers/getInstanceOf';
 
-export abstract class BaseController implements IBaseController {
+export abstract class BaseController {
     get mapper() {
         return getInstanceOf<IEntityMapperService>(Di.EntityMapperService);
     }

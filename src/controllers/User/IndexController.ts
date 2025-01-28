@@ -18,13 +18,25 @@ export class IndexController extends BaseController {
 
     async handle(request: Request, response: Response) {
         try {
-            const users = await this.userRepository.getAllUsers();
+            const { role } = request.query;
+
+            let users;
+            
+            if (role) {
+                users = await this.userRepository.getUsersByRole(role as string); // Załóżmy, że masz taką metodę w repozytorium
+            } else {
+                users = await this.userRepository.getAllUsers();
+            }
 
             const mappedUsers = users.map(user => new UserMapper(user));
 
             return this.finalizeRequest(response, HTTP.OK, mappedUsers);
         } catch (error) {
-            return this.finalizeRequest(response, HTTP.INTERNAL_SERVER_ERROR);
+            console.error('Error in IndexController:', error);
+
+            return this.finalizeRequest(response, HTTP.INTERNAL_SERVER_ERROR, {
+                error: 'Internal server error',
+            });
         }
     }
 }
