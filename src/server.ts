@@ -9,13 +9,10 @@ import { setupDi } from '@utils/setupDi';
 import { setupExpress } from '@utils/setupExpress';
 import { getInstanceOf } from '@helpers/getInstanceOf';
 import { attachEngineIO } from '@utils/attachEngineIO';
-import { loadYupCustomMethods } from '@utils/loadYupCustomMethods';
 
 export const server = async () => {
     const app = express();
     const { serverInstance, engineIO } = attachEngineIO(app);
-
-    await loadYupCustomMethods();
 
     const di = await setupDi();
 

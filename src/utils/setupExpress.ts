@@ -1,75 +1,64 @@
-import cors from "cors";
-import path from "path";
-import fs from "fs-extra";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
-import { StatusCodes as HTTP } from "http-status-codes";
-import express, { Application, Request, Response, Router } from "express";
+import cors from 'cors';
+import path from 'path';
+import fs from 'fs-extra';
+import helmet from 'helmet';
+import { StatusCodes as HTTP } from 'http-status-codes';
+import express, { Application, Request, Response, Router } from 'express';
 
-import { APP } from "@config";
+import { APP } from '@config';
 
-import { Dependency } from "@enums/Dependency";
+import { Dependency } from '@enums/Dependency';
 
 export const setupExpress = async (app: Application) => {
-  app.use(
-    cors({
-      credentials: false,
-      origin: [APP.URL, APP.E2E_TESTS_URL],
-    })
-  );
+    app.use(
+        cors({
+            credentials: false,
+            origin: [APP.URL],
+        })
+    );
 
-  app.use(express.json());
+    app.use(express.json());
 
-  app.use(helmet());
+    app.use(helmet());
 
-  app.use(cookieParser());
+    app.use(APP.ROUTES_PREFIX, await getRoutes());
 
-  app.use(APP.ROUTES_PREFIX, await getRoutes());
-
-  app.use((request: Request, response: Response) => {
-    return response
-      .status(HTTP.INTERNAL_SERVER_ERROR)
-      .send("Oops.. Something broke 😢");
-  });
+    app.use((request: Request, response: Response) => {
+        return response.status(HTTP.INTERNAL_SERVER_ERROR).send('Oops.. Something broke 😢');
+    });
 };
 
 async function getRoutes() {
-  const routesDir = path.join(APP.BASE_DIR, "routes");
+    const routesDir = path.join(APP.BASE_DIR, 'routes');
+    const mainRouter = Router();
 
-  const versions = fs.readdirSync(routesDir);
-
-  const mainRouter = Router();
-
-  for (const version of versions) {
-    const versionRouter = Router();
-
-    const routers = fs.readdirSync(path.join(routesDir, version));
+    const routers = fs.readdirSync(routesDir);
 
     const registeredRouters: string[] = [];
 
-    for (const router of routers) {
-      // @NOTE consider adding dirs skip
+    for (const routerFile of routers) {
+        if (!routerFile.endsWith('.ts') && !routerFile.endsWith('.js')) {
+            continue;
+        }
 
-      const dependency = await import(
-        path.resolve(APP.BASE_DIR, "routes", version, router)
-      );
+        const routeName = path.basename(routerFile, path.extname(routerFile)); // Nazwa pliku bez rozszerzenia
+        const routePath = path.resolve(routesDir, routerFile);
 
-      const [routeName] = router.split(".");
+        try {
+            const dependency = await import(routePath); // Importujemy plik routingu
 
-      versionRouter.use(`/${routeName}`, dependency.default);
+            mainRouter.use(`/${routeName}`, dependency.default);
 
-      registeredRouters.push(routeName);
+            registeredRouters.push(routeName);
+        } catch (error) {
+            console.error(`Failed to load route "${routeName}" from "${routePath}":`, error);
+        }
     }
 
     log.debug({
-      message: `registered ${version} routes: \n${registeredRouters.join(
-        "\n"
-      )}`,
-      dependency: Dependency.Express,
+        message: `Registered routes: \n${registeredRouters.join('\n')}`,
+        dependency: Dependency.Express,
     });
 
-    mainRouter.use(`/${version}`, versionRouter);
-  }
-
-  return mainRouter;
+    return mainRouter;
 }

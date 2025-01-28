@@ -1,8 +1,8 @@
 import { injectable } from 'tsyringe';
-import { User } from '@db/entities/User';
-import { IUserRepository } from 'types/repositories/IUserRepository';
 
-import { BaseRepository } from './BaseRepository';
+import { User } from '@db/entities/User';
+import { BaseRepository } from '@repositories/BaseRepository';
+import { IUserRepository } from 'types/repositories/IUserRepository';
 
 @injectable()
 export class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -13,8 +13,14 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
     getAllUsers(): Promise<User[]> {
         return this.getAll({
             order: {
-                createdAt: 'DESC', // Sortowanie po dacie utworzenia
+                createdAt: 'DESC',
             },
+        });
+    }
+
+    getUsersByRole(role: string): Promise<User[]> {
+        return this.getAll({
+            where: { role },
         });
     }
 

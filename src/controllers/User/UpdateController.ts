@@ -3,8 +3,9 @@ import { inject, injectable } from 'tsyringe';
 import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { Di } from '@enums/Di';
-import { IUserRepository } from 'types/repositories/IUserRepository';
+import { UserMapper } from '@mappers/UserMapper';
 import { BaseController } from '@controllers/BaseController';
+import { IUserRepository } from 'types/repositories/IUserRepository';
 
 @injectable()
 export class UpdateController extends BaseController {
@@ -18,23 +19,7 @@ export class UpdateController extends BaseController {
     async handle(request: Request, response: Response): Promise<Response> {
         try {
             const { id } = request.params;
-            const { firstName, lastName, role } = request.body;
-
-            if (!id || isNaN(Number(id))) {
-                return this.finalizeRequest(response, HTTP.BAD_REQUEST, { error: 'Invalid user ID' });
-            }
-
-            if (!firstName && !lastName && !role) {
-                return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
-                    error: 'Request body must contain at least one property: firstName, lastName, or role',
-                });
-            }
-
-            if (role && !['user', 'admin'].includes(role)) {
-                return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
-                    error: 'Role must be either "user" or "admin"',
-                });
-            }
+            const { firstName, lastName, email, role } = request.body;
 
             const user = await this.userRepository.getById(Number(id));
 
@@ -42,14 +27,31 @@ export class UpdateController extends BaseController {
                 return this.finalizeRequest(response, HTTP.NOT_FOUND, { error: 'User not found' });
             }
 
+            const existingUser = await this.userRepository.findByEmail(email);
+
+            if (existingUser) {
+                return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
+                    error: 'Email address is already taken',
+                });
+            }
+
             const updatedFields: Partial<typeof user> = {};
             if (firstName) updatedFields.firstName = firstName;
             if (lastName) updatedFields.lastName = lastName;
+            if (email) updatedFields.email = email;
             if (role) updatedFields.role = role;
 
             await this.userRepository.primitiveUpdate({ id: Number(id) }, updatedFields);
 
-            return this.finalizeRequest(response, HTTP.OK, { message: 'User updated successfully' });
+            const updatedUser = await this.userRepository.getById(Number(id));
+
+            if (!updatedUser) {
+                return this.finalizeRequest(response, HTTP.NOT_FOUND, { error: 'User not found after update' });
+            }
+
+            const mappedUser = new UserMapper(updatedUser);
+
+            return this.finalizeRequest(response, HTTP.OK, mappedUser);
         } catch (error) {
             console.error('Error in UpdateController:', error);
 

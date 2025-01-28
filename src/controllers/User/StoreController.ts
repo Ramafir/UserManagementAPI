@@ -21,15 +21,11 @@ export class StoreController extends BaseController {
         try {
             const { firstName, lastName, email, role } = request.body;
 
-            if (!email || !role) {
-                return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
-                    error: 'Email and role are required',
-                });
-            }
+            const existingUser = await this.userRepository.findByEmail(email);
 
-            if (!['user', 'admin'].includes(role)) {
+            if (existingUser) {
                 return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
-                    error: 'Role must be either "user" or "admin"',
+                    error: 'Email address is already taken',
                 });
             }
 

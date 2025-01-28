@@ -78,7 +78,6 @@ export class BaseRepository<T extends { id: number | string }> implements IBaseR
         return this.database.save(entity, options);
     }
 
-    // @NOTE OUTPUT or RETURNING clause only supported by Microsoft SQL Server or PostgreSQL or MariaDB databases.
     primitiveUpdate(options: FindOptionsWhere<T>, partialEntity: QueryDeepPartialEntity<T>): Promise<UpdateResult> {
         return this.database.update(options, partialEntity);
     }
