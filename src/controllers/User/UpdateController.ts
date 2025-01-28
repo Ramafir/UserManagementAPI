@@ -19,7 +19,7 @@ export class UpdateController extends BaseController {
     async handle(request: Request, response: Response): Promise<Response> {
         try {
             const { id } = request.params;
-            const { firstName, lastName, email, role } = request.body;
+            const { firstName, lastName, role } = request.body;
 
             const user = await this.userRepository.getById(Number(id));
 
@@ -27,18 +27,9 @@ export class UpdateController extends BaseController {
                 return this.finalizeRequest(response, HTTP.NOT_FOUND, { error: 'User not found' });
             }
 
-            const existingUser = await this.userRepository.findByEmail(email);
-
-            if (existingUser) {
-                return this.finalizeRequest(response, HTTP.BAD_REQUEST, {
-                    error: 'Email address is already taken',
-                });
-            }
-
             const updatedFields: Partial<typeof user> = {};
             if (firstName) updatedFields.firstName = firstName;
             if (lastName) updatedFields.lastName = lastName;
-            if (email) updatedFields.email = email;
             if (role) updatedFields.role = role;
 
             await this.userRepository.primitiveUpdate({ id: Number(id) }, updatedFields);

@@ -7,7 +7,7 @@ export const storeUserValidation = [
         .withMessage('First name must be a string')
         .isLength({ min: 1, max: 50 })
         .withMessage('First name must be between 1 and 50 characters'),
-        
+
     body('lastName')
         .optional()
         .isString()
@@ -40,11 +40,6 @@ export const updateUserValidation = [
         .isString()
         .isLength({ min: 2, max: 50 })
         .withMessage('Last name must be between 2 and 50 characters'),
-
-    body('email')
-        .optional()
-        .isEmail()
-        .withMessage('Invalid email format'),
 
     body('role')
         .optional()

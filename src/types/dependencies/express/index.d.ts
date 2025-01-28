@@ -5,7 +5,6 @@ export {};
 declare global {
   namespace Express {
     export interface Request {
-      // @NOTE -> available only after `requireAuthentication`
       userId: number;
       sessionId: string;
     }
