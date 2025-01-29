@@ -23,7 +23,7 @@ export class IndexController extends BaseController {
             let users;
             
             if (role) {
-                users = await this.userRepository.getUsersByRole(role as string); // Załóżmy, że masz taką metodę w repozytorium
+                users = await this.userRepository.getUsersByRole(role as string);
             } else {
                 users = await this.userRepository.getAllUsers();
             }

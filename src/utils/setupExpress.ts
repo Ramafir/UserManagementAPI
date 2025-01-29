@@ -41,11 +41,11 @@ async function getRoutes() {
             continue;
         }
 
-        const routeName = path.basename(routerFile, path.extname(routerFile)); // Nazwa pliku bez rozszerzenia
+        const routeName = path.basename(routerFile, path.extname(routerFile));
         const routePath = path.resolve(routesDir, routerFile);
 
         try {
-            const dependency = await import(routePath); // Importujemy plik routingu
+            const dependency = await import(routePath);
 
             mainRouter.use(`/${routeName}`, dependency.default);
 
